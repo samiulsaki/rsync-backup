@@ -32,7 +32,6 @@ for i in $( IFS=$'\n'; echo "${client[*]}" ); do
 				eval "old_mod_time=$remote_mod_time"
 				counter=0
 		        fi
-		        echo "$counter"
 	        	if [ "$counter" == '12' ]; then
 
 				# When counter reach 60secs and no more modifications have been made, the process rsync starts.

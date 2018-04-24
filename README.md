@@ -4,7 +4,7 @@
 
 ### You can look at the process of files/directories are being backed up by running the follwing command:
 ```console
- watch -n 0.1 "tree /home/ubuntu/"
+watch -n 0.1 "tree /home/ubuntu/project/"
  ```
 
 ### To test the script open a terminal and ssh to backup-server with the follwoing command:
