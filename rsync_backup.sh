@@ -1,6 +1,5 @@
 #! /bin/bash
-
-# Script: Backup Script
+# Script: RSYNC Backup Script
 
 # Read the clients file and add to the client array
 readarray client < ~/clients.txt
