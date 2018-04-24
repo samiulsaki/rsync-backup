@@ -37,17 +37,13 @@ for i in $( IFS=$'\n'; echo "${client[*]}" ); do
 				# Changes the file Read/Write/Execute permissions for end user (client).
 				eval "ssh -i $HOME/${ssh_path} ${remote_client} 'sudo chmod -x ~/project/'"
 
-				# Removes the local working branch (not the archieve folder). Should have go through every root folder and have different
-				# functions accordingly.
-				eval "rm -rf $HOME/project/working_branch/*"
-
-				# Gives the file permission back to the end user and rsync the folders again. Ideally should create different users for
-				# end users and make remove the user W/X access until all the processes completed
+				# Gives the file permission back to the end user and rsync the folders again
 				eval "ssh -i $HOME/${ssh_path} ${remote_client} 'sudo chmod +x ~/project/'"
-				eval "rsync -Pav -e 'ssh -i $HOME/$ssh_path' ${remote_client}:/home/ubuntu/project/ /home/ubuntu/project/"
+				eval "rsync -Pav -e 'ssh -i $HOME/$ssh_path' ${remote_client}:/home/ubuntu/project/archive/ /home/ubuntu/project/archive/"
+				eval "rsync -Pavh -e 'ssh -i $HOME/$ssh_path' ${remote_client}:/home/ubuntu/project/working_branch/ /home/ubuntu/project/working_branch/ --delete"
 
-				# Finally removes everything inside the archieve folder.
-				eval "ssh -i $HOME/${ssh_path} ${remote_client} 'sudo rm -rf /home/ubuntu/project/archieve/*'"
+				# Finally removes everything inside the archive folder.
+				eval "ssh -i $HOME/${ssh_path} ${remote_client} 'sudo rm -rf /home/ubuntu/project/archive/*'"
 	                	exit 0
 		        fi
 		done
