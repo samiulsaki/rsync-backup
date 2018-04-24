@@ -9,7 +9,7 @@ for i in $( IFS=$'\n'; echo "${client[*]}" ); do
 	remote_client=$i
 	# ideally we could add the public key to the authorized keys of clients
 	# .ssh folder
-	ssh_path=".ssh/internal_sam/internal_sam_2018"
+	ssh_path=".ssh/internal/internal"
 
 	counter=0
 	old_mod_time=0
@@ -38,15 +38,17 @@ for i in $( IFS=$'\n'; echo "${client[*]}" ); do
 				# Changes the file Read/Write/Execute permissions for end user (client).
 				eval "ssh -i $HOME/${ssh_path} ${remote_client} 'sudo chmod -x ~/project/'"
 
-				# Removes the local working branch (not the archieve folder)
+				# Removes the local working branch (not the archieve folder). Should have go through every root folder and have different
+				# functions accordingly.
 				eval "rm -rf $HOME/project/working_branch/*"
 
-				# Gives the file permission back to the end user and rsync the folders again
+				# Gives the file permission back to the end user and rsync the folders again. Ideally should create different users for
+				# end users and make remove the user W/X access until all the processes completed
 				eval "ssh -i $HOME/${ssh_path} ${remote_client} 'sudo chmod +x ~/project/'"
 				eval "rsync -Pav -e 'ssh -i $HOME/$ssh_path' ${remote_client}:/home/ubuntu/project/ /home/ubuntu/project/"
 
 				# Finally removes everything inside the archieve folder.
-				eval "ssh -i /home/ubuntu/.ssh/internal_sam/internal_sam_2018 ubuntu@10.0.21.192 'sudo rm -rf /home/ubuntu/project/archieve/*'"
+				eval "ssh -i $HOME/${ssh_path} ${remote_client} 'sudo rm -rf /home/ubuntu/project/archieve/*'"
 	                	exit 0
 		        fi
 		done
@@ -57,6 +59,7 @@ function check {
 	# Checks for change in modification time and dir_size in the remote server (client)
 	remote_mod_size=$(ssh -i $HOME/${ssh_path} ${remote_client} "du -b ~/project/working_branch/ | tail -1" | awk '{print $1}')
 	remote_mod_time=$(ssh -i $HOME/${ssh_path} ${remote_client} "find /home/ubuntu/project/working_branch/* -printf '%TY%Tm%Td%TH%TM%TS\n' | sort -r | head -1 | sed 's/\.//g'")
+
         # Checks for change in modification time and dir_size in the local server (backup-server)
 	local_mod_size=$(du -b ~/project/working_branch/ | tail -1 | awk '{print $1}')
 	local_mod_time=$(find /home/ubuntu/project/working_branch/* -printf '%TY%Tm%Td%TH%TM%TS\n' | sort -r | head -1 | sed 's/\.//g')
@@ -65,7 +68,6 @@ function check {
 check
 
 # If the local directory size and modification time changes then runs the 'rsync_run' function, otherwise exits out
-
 if [ "$remote_mod_size" -gt "$local_mod_size" ] || [ "$remote_mod_time" != "$local_mod_time" ]; then
 #	echo "Modification happened"
 	rsync_run
