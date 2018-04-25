@@ -43,7 +43,7 @@ for i in $( IFS=$'\n'; echo "${client[*]}" ); do
 				# Checks which files have in local working_branch
 				f=$(ls -dl -- ~/project/working_branch/* | awk '{print $9}' |  while read line; do echo "${line}"; done )
 				# Checks if there is any files moved to archive folder in remote client
-				arc=$(eval "ssh -i /home/ubuntu/.ssh/internal_sam/internal_sam_2018 ubuntu@10.0.21.192 'ls -la ~/project/archive' | tail -n+4" | awk '{print $9}' )
+				arc=$(eval "ssh -i $HOME/${ssh_path} ${remote_client} 'ls -la ~/project/archive' | tail -n+4" | awk '{print $9}' )
 				# Checks which folder/file was moved to archive folder. Only moves the file if same folder/file is moved in remote archive. Files gets moved from local working_branch
 				# to local archive folder.
 				for j in $f; do
