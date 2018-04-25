@@ -9,12 +9,12 @@ watch -n 0.1 "tree /home/ubuntu/project/"
 
 ### To test the script open a terminal and ssh to backup-server with the follwoing command:
 ```console
-ssh ubuntu@128.39.121.80:2222
+ssh ubuntu@35.184.115.170 
 ```
 
 ### Open another terminal and ssh to client server:
 ```console
-ssh ubuntu@128.39.121.80:2223
+ssh ubuntu@35.202.114.153 
 ```
 ##### *Passwords will be provided in separate email*
 
